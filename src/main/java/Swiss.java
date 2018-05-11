@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,33 +42,40 @@ public class Swiss extends JFrame {
 
                 try {
 //                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName.getText()), "cp1251"));//"UTF-8"
+//                    FileInputStream fin = new FileInputStream(fileName.getText());
+//                    int numAvailable = fin.available();
+//                    int numByte = 100;
+//
+//                    byte[] buffer;
+//
+//                    while (numAvailable > 0){
+//                        if (numAvailable < numByte){
+//                            buffer = new byte[numAvailable];
+//                        }
+//                        else {
+//                            buffer = new byte[numByte];
+//                        }
+//                        // считываем буфер
+//                        fin.read(buffer, fin.available() - numAvailable, buffer.length);
+//                        StringBuilder stringBuffer = new StringBuilder();
+//                        for (byte byteBuffer : buffer){
+//                            char alphabet = (char) byteBuffer;
+//                            stringBuffer.append(alphabet);
+//                        }
+//                        stringList.add(stringBuffer.toString());
+//                        numAvailable = numAvailable - numByte;
+//                    }
+//                    fin.close();
 
-                    FileInputStream fin = new FileInputStream(fileName.getText());
-                    java.util.List<String> stringList = new ArrayList<String>();
+                    List<String> stringList = new ArrayList<String>();
+                    BufferedReader reader = new BufferedReader(new FileReader(fileName.getText()));
 
-                    int numAvailable = fin.available();
-                    int numByte = 100;
-
-                    byte[] buffer;
-
-                    while (numAvailable > 0){
-                        if (numAvailable < numByte){
-                            buffer = new byte[numAvailable];
-                        }
-                        else {
-                            buffer = new byte[numByte];
-                        }
-                        // считываем буфер
-                        fin.read(buffer, fin.available() - numAvailable, buffer.length);
-                        StringBuilder stringBuffer = new StringBuilder();
-                        for (byte byteBuffer : buffer){
-                            char alphabet = (char) byteBuffer;
-                            stringBuffer.append(alphabet);
-                        }
-                        stringList.add(stringBuffer.toString());
-                        numAvailable = numAvailable - numByte;
+                    while (reader.ready()) {
+                        stringList.add(reader.readLine());
                     }
-                    fin.close();
+                    reader.close();
+
+
 
                     try {
                         getJDBC(fileName.getText(), stringList);
